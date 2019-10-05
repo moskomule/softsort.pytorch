@@ -83,11 +83,11 @@ class SoftQuantizer(object):
 
     @property
     def softcdf(self) -> torch.Tensor:
-        return (1 / self._a) * (self.transport @ self._b.cumsum(dim=1).unsqueeze(-1)).squeeze(-1)
+        return (1 / self._a) * torch.einsum("bnm,bm->bn", self.transport, self._b.cumsum(dim=1))
 
     @property
     def softsort(self) -> torch.Tensor:
-        return (1 / self._b) * (self.transport.transpose(1, 2) @ self._x.unsqueeze(-1)).squeeze(-1)
+        return (1 / self._b) * torch.einsum("bnm,bn->bm", self.transport, self._x)
 
     @staticmethod
     def _rescale_input(input: torch.Tensor,
