@@ -105,10 +105,8 @@ class SoftQuantizer(object):
 
 
 def test_softquantizer():
-    x = torch.rand(4, 3)
-    y = torch.rand(4, 2)
-    a = torch.ones_like(x) / 3
-    b = torch.ones_like(y) / 2
-    q = SoftQuantizer(x, a, y, b)
-    q.softcdf
-    q.softsort
+    x = torch.rand(1, 3)
+    q = SoftQuantizer(x, num_targets=3)
+    print(q.transport)
+    print(q.softcdf)
+    print(q.softsort)

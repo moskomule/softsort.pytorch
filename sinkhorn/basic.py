@@ -56,13 +56,13 @@ def log_sinkhorn(x: torch.Tensor,
     log_b = b.log()
     alpha = torch.zeros_like(log_a)
     beta = torch.zeros_like(log_b)
+
     for i in range(max_iter):
-        centerized = _centerize(c, alpha, beta)
-        alpha += (eps * log_a + _softmin(centerized, eps, 2))
-        beta += (eps * log_b + _softmin(centerized, eps, 1))
+        alpha += (eps * log_a + _softmin(_centerize(c, alpha, beta), eps, 2))
+        beta += (eps * log_b + _softmin(_centerize(c, alpha, beta), eps, 1))
 
         if i % num_inner_iter == 0:
-            _b = (_centerize(c, alpha, beta) / eps).exp().sum(dim=1)
+            _b = (-_centerize(c, alpha, beta) / eps).exp().sum(dim=1)
             if ((b - _b).abs() / b).sum() < threshold:
                 break
     # return transport
@@ -71,8 +71,10 @@ def log_sinkhorn(x: torch.Tensor,
 
 def test_log_sinkhorn():
     # just check it is runnable
-    x = torch.randn(4, 3)
-    y = torch.randn(4, 2)
+    x = torch.zeros(1, 3)
+    x[0, 0] = 1
+    y = torch.randn(1, 2)
+    x[0, 1] = 1
     a = torch.ones_like(x) / 3
     b = torch.ones_like(y) / 2
-    log_sinkhorn(x, y, a, b, 0.1, 1, 0.1)
+    print(log_sinkhorn(x, y, a, b, 0.01, 2, 0.0001))
