@@ -1,4 +1,5 @@
 import torch
+from torch import jit
 
 
 def _softmin(input: torch.Tensor,
@@ -23,7 +24,7 @@ def _centerize(c: torch.Tensor,
     return c - x.unsqueeze(-1) - y.unsqueeze(1)
 
 
-# @jit.script
+@jit.script
 def log_sinkhorn(x: torch.Tensor,
                  y: torch.Tensor,
                  a: torch.Tensor,

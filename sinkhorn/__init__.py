@@ -1,1 +1,1 @@
-from .basic import log_sinkhorn
+from .core import log_sinkhorn

@@ -4,7 +4,7 @@ from typing import Optional
 
 import torch
 
-from sinkhorn import log_sinkhorn
+from core import log_sinkhorn
 
 
 class SoftQuantizer(object):
@@ -104,9 +104,3 @@ class SoftQuantizer(object):
         return f((input - mean) / std)
 
 
-def test_softquantizer():
-    x = torch.rand(1, 3)
-    q = SoftQuantizer(x, num_targets=3)
-    print(q.transport)
-    print(q.softcdf)
-    print(q.softsort)
